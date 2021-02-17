@@ -1,15 +1,8 @@
-import Message from './Message.js';
+import React from 'react';
 
-const Description = () =>{
-  return <p>Hola este es un ejemplo de multiples componentes wowowowow</p>
-}
-const App= () => {
+function App() {
   return (
-    <div className="App">
-      <Message message='Hola Mundo'/>
-      <Message message='Perros'/>
-      <Description />
-    </div>
+    <h1>hola Mundo</h1>
   );
 }
 

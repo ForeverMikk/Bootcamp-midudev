@@ -1,36 +1,63 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-// Forma Corta
-// const Title = ({course}) => <h1>{course}</h1>
-// Forma Larga
-const Title =(props) => {
-  return <h1>{props.course}</h1>
+const WarningNotUsed = () => {
+  return <p>Todavia no se ha usado el contador</p>
 }
 
-const Subtitle = (props) => {
-  return <p> <h3>{props.part}</h3> {props.exercice}</p>
+const ListOfClicks = ({clicks}) => {
+  // debugger;
+  return <p>{clicks.join(", ")}</p>
 }
+const App = ({valorInicial}) => {
+  // const [left, setLeft] = useState(0);
+  // const [right, setRight] =useState(0);
 
-const App = () => {
-  const course = 'Half Stack application development'
-  const part1 = 'Fundamentals of React'
-  const exercises1 = 10 
-  const part2 = 'Using props to pass data'
-  const exercises2 = 7
-  const part3 = 'State of a component'
-  const exercises3 = 14
+  const [counters, setCounters] = useState({
+    right: 0,
+    left: 0, 
+    // clicks: 0,
+    mensaje: "Hola que hace"
+  })
+
+  // Hay que evitar usar Estados Para cualquier cosa
+  const[clicks, setClicks] = useState([])
+
+  const handleLeft = () => {
+    const newCountersState = {
+      ...counters,
+      left: counters.left + 1,
+    };
+    setCounters(newCountersState)
+    setClicks(prevClicks => [...prevClicks,'L'])
+  }
+  
+  const handleRight = () => {
+    setCounters({
+      ...counters,
+      right: counters.right + 1,
+    })
+    setClicks(prevClicks => [...prevClicks,'R'])
+  }
 
   return (
     <div>
-      <Title course={course}/>
-      <Subtitle part={part1} exercice={exercises1}/>
-      <Subtitle part={part2} exercice={exercises2}/>
-      <Subtitle part={part3} exercice={exercises3}/>
-      <p>Number of exercises {exercises1 + exercises2 + exercises3}</p>
+      <p>Clicks totales: {clicks.length}</p>
+      <p>{counters.mensaje}</p>
+      {counters.left}
+      <button onClick={handleLeft}>Left</button>
+      <button onClick={handleRight}>Right</button>
+      {counters.right}
+      <p>Clicks totales: {clicks.length}</p>
+      {/* RENDERISADO CONDICIONAL */}
+      {clicks.length === 0
+      ? <WarningNotUsed />
+      : <ListOfClicks clicks={clicks}/>}
     </div>
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+const rootElement = document.getElementById("root");  
+
+ReactDOM.render(<App valorInicial={0}/>, rootElement);
