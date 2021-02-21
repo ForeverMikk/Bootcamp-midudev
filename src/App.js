@@ -1,50 +1,62 @@
-import React from "react";
+import React, { useState } from "react";
 
-const notes = [
-  {
-    id: 1,
-    content: "HTML is easy",
-    date: "2019-05-30",
-    important: true,
-  },
-  {
-    id: 2,
-    content: "CSS is easy",
-    date: "2019-05-30",
-    important: true,
-  },
-  {
-    id: 3,
-    content: "JS is easy",
-    date: "2019-05-30",
-    important: true,
-  },
-];
+//Asi se exporta un Modulo Nombrado
+import { Note } from "./Note";
 
-// const notes = [];
+export default function App(props) {
+  const [notes, setNotes] = useState(props.notes);
+  const [newNote, setNewNote] = useState("");
+  const [showAll, setShowAll] = useState(true);
 
-export default function App() {
+  const handleChange = (event) => {
+    setNewNote(event.target.value);
+  };
+
+  const handleSumbit = (event) => {
+    event.preventDefault();
+
+    console.log("crear Nota");
+    const noteToAddToState = {
+      id: notes.length + 1,
+      content: newNote,
+      date: new Date().toISOString(),
+      important: Math.random() < 0.5,
+    };
+
+    setNotes([...notes, noteToAddToState]);
+    // setNotes(notes.concat(noteToAddToState));
+    setNewNote("");
+  };
+
+  const handleShowAll = () => {
+    setShowAll(!showAll);
+  };
+
   return (
-    // <div>
-    //   {notes.map(note => {
-    //     return (
-    //       <p>
-    //         <strong>{note.id}</strong>
-    //         {note.content}
-    //       </p>
-    //     );
-    //   })}
-    // </div>
-
     <div>
-      {notes.map((note) => (
-        <div key={note.id}>
-          <p>{note.content}</p>
-          <small>
-            <time></time>
-          </small>
-        </div>
-      ))}
+      <h1>Notas</h1>
+      <button onClick={handleShowAll}>
+        {showAll ? "Show only Important" : "ShowAll"}
+      </button>
+
+      <ul>
+        {notes
+          .filter((note) => {
+            if (showAll) return true;
+            return note.important === true;
+          })
+          .map((note) => (
+            // Cuando se renderisa una lista de elementos se debe crear una "key"
+            // y tener un identificador unico
+            // En este casi se utiliza el id de los objetos
+            <Note key={note.id} {...note} />
+          ))}
+      </ul>
+
+      <form onSubmit={handleSumbit}>
+        <input type="text" onChange={handleChange} value={newNote} />
+        <button> Crear Nota</button>
+      </form>
     </div>
   );
 }
