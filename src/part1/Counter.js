@@ -5,14 +5,24 @@ const CounterComponent = ({number}) => {
     return <h1>{number}</h1>
 } 
 
+const INITIAL_COUNTER_STATE = {
+    left: 0,
+    right: 0,
+    message: "Mensaje del Contador"
+}
+
 const Counter = () => {
-    const [counter, setCounter] = useState({
-        left: 0,
-        right: 0,
-        message: "Mensaje del Contador"
-    });
+    const [counter, setCounter] = useState(INITIAL_COUNTER_STATE);
     
     const [clicks, setClicks] = useState([]);
+
+    const ListOfClicks = ({ clicks }) => {
+        return <p>{clicks.join(", ")}</p>
+    }
+
+    const WarningNotUsed = () => {
+        return <p>No hay Clicks</p>
+    }
 
     const isEven = counter.clicks % 2 === 0;
     const mensajePar = isEven ? "Es Par" : "Es Inpar";
@@ -39,12 +49,7 @@ const Counter = () => {
     }
 
     const handleClickReset = () => {
-        const newCounterState = {
-            ...counter,
-            left: 0,
-            right: 0
-        }
-        setCounter(newCounterState)
+        setCounter(INITIAL_COUNTER_STATE)
     }
 
     // const handleClickRest = () => {
@@ -62,7 +67,10 @@ const Counter = () => {
             <button onClick={handleClickRight}>Derecha</button>
             <button onClick={handleClickReset}>Reset</button>
 
-            {clicks.join(", ")}
+            {clicks.length === 0
+                ? <WarningNotUsed />
+                : <ListOfClicks clicks={clicks} />
+            }
             {/* <button onClick={handleClickRest}>Restar</button> */}
         </>
     )
