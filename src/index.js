@@ -22,7 +22,7 @@ const notes = [
     important: true
   },
   {
-    id: 2,
+    id: 3,
     content: 'JavaScript',
     date: '2022-05-30T17:30:31.09BZ',
     important: true
