@@ -1,32 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Note from './part2/Note';
 
-const notes = [
-  {
-    id: 1,
-    content: 'HTML',
-    date: '2022-05-30T17:30:31.09BZ',
-    important: true
-  },
-  {
-    id: 2,
-    content: 'CSS',
-    date: '2022-05-30T17:30:31.09BZ',
-    important: true
-  },
-  {
-    id: 2,
-    content: 'JavaScript',
-    date: '2022-05-30T17:30:31.09BZ',
-    important: true
-  },
-]
+const App = (props) => {
 
-const App= () => {
-  return (
+  const [notes, setNotes] = useState(props.notes);
+
+  return ( 
     <div className="App">
-      {notes.map((note) => (
-        <p>{note.id}</p>
-      ))}
+      <h1>Notas</h1>
+
+      <ol>
+        {notes.map((note) => (
+          <Note {...note}/>
+        ))}
+      </ol>
+
+      <div>
+        <input type='text' />
+        <button>Crear Nota</button>
+      </div>
     </div>
   );
 }
