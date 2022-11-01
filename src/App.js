@@ -1,36 +1,38 @@
-import React, { useState } from 'react';
-import Note from './part2/Note';
+import React, { useState, useEffect } from 'react';
+import Note from './part4-fetch-data/Note';
 
-const App = (props) => {
+const App = () => {
 
-  const [notes, setNotes] = useState(props.notes);
+  const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState('');
-  const [showAll, setShowAll] = useState(true);
+  const [loading, setLoading] = useState(false);
 
+  
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/posts")
+      .then((response) => response.json())
+      .then((data) => {
+        setNotes(data);
+      }); 
+    
+  }, [])
+  
   const handleChange = (event) => {
     setNewNote(event.target.value); 
   }
 
-  const handleClick = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('crear nota');
-    // console.log(newNote);
 
     const noteToAdd = {
       id: notes.length + 1,
-      content: newNote,
-      date: new Date().toISOString(),
-      important: Math.random() < 0.5
+      title: newNote,
+      body: newNote
     }
 
     console.log(noteToAdd);
     setNotes([...notes, noteToAdd])
     setNewNote('')
-
-  }
-
-  const handleShowAll = () => {
-    setShowAll(!showAll);
   }
 
 
@@ -38,21 +40,13 @@ const App = (props) => {
     <div className="App">
       <h1>Notas</h1>
 
-      <button onClick={handleShowAll}>{showAll ? 'show only important' : 'show all'} </button>
       <ol>
-        {notes
-        .filter(note => {
-          // Si el showAll es true retorna todos los elementos
-          if (showAll === true) return true;
-          // Si no verifica cuales elementos son importantes y los renderiza
-          return note.important === true;
-        })
-        .map((note) => (
+        {notes.map((note) => (
           <Note key={note.id} {...note}/>
         ))}
       </ol>
 
-      <form onSubmit={handleClick}>
+      <form onSubmit={handleSubmit}>
         <input type='text' onChange={handleChange} value={newNote} />
         <button>Crear Nota</button>
       </form>
