@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Note from './part4-fetch-data/Note';
+import axios from 'axios';
 
 const App = () => {
 
@@ -9,10 +10,14 @@ const App = () => {
 
   
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/posts")
-      .then((response) => response.json())
-      .then((data) => {
+    setLoading(true);
+
+    axios.get("https://jsonplaceholder.typicode.com/posts")
+      .then((response) => {
+        console.log(response)
+        const {data} = response;
         setNotes(data);
+        setLoading(false);
       }); 
     
   }, [])
@@ -25,14 +30,23 @@ const App = () => {
     event.preventDefault();
 
     const noteToAdd = {
-      id: notes.length + 1,
+      // id: notes.length + 1,
       title: newNote,
-      body: newNote
+      body: newNote,
+      userId: 1
     }
 
-    console.log(noteToAdd);
-    setNotes([...notes, noteToAdd])
-    setNewNote('')
+    axios.post("https://jsonplaceholder.typicode.com/posts", noteToAdd)
+    .then(response => {
+      const {data} = response;
+      // console.log(data)
+      setNotes(prevNotes => prevNotes.concat(data));
+    })
+
+
+    // console.log(noteToAdd);
+    // setNotes([...notes, noteToAdd])
+    // setNewNote('')
   }
 
 
@@ -40,16 +54,22 @@ const App = () => {
     <div className="App">
       <h1>Notas</h1>
 
+      {loading 
+        ? 'Cargando....' 
+        : ''  
+      }
+
+      <form onSubmit={handleSubmit}>
+        <input type='text' onChange={handleChange} value={newNote} />
+        <button>Crear Nota</button>
+      </form>
+
       <ol>
         {notes.map((note) => (
           <Note key={note.id} {...note}/>
         ))}
       </ol>
 
-      <form onSubmit={handleSubmit}>
-        <input type='text' onChange={handleChange} value={newNote} />
-        <button>Crear Nota</button>
-      </form>
     </div>
   );
 }
